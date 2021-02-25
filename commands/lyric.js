@@ -1,8 +1,9 @@
 const { MessageEmbed } = require('discord.js');
 const { searchSong, getLyric } = require('../lib/genius_api/fetcher')
+const { sendEmbeds } = require('../lib/utils')
 
 module.exports = {
-    name: '!lyric',
+    name: 'lyric',
     description: 'Get lyric of a song!',
     getRandomColor() {
         var letters = '0123456789ABCDEF';
@@ -15,22 +16,19 @@ module.exports = {
     async execute(msg, args) {
         args = args.join(' ')
         if (args !== "") {
-            msg.channel.send("Here is the lyric")
+            msg.channel.send("Fetching your lyrics, please wait...")
             console.log(args)
             const result = await searchSong(args)
             console.log(result)
             const lyric = await getLyric(result.url)
 
-            const randomColor = Math.floor(Math.random()*16777215).toString(16);
             if (lyric !== "") {
-                const embed = new MessageEmbed()
-                    // Set the title of the field
-                    .setTitle(result.full_title)
-                    // Set the color of the embed
-                    .setColor(this.getRandomColor())
-                    // Set the main content of the embed
-                    .setDescription(lyric);
-                msg.channel.send(embed)
+                const data = { 
+                                "title": result.full_title,
+                                "description": lyric,
+                                "url": result.url
+                             }
+                sendEmbeds(data, msg.channel)
             } else {
                 msg.channel.send("Cannot find lyric for " + args)
             }

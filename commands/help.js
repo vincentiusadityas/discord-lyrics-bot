@@ -1,5 +1,5 @@
 module.exports = {
-    name: '!help',
+    name: 'help',
     description: 'Help message to let user know what the app is.',
     execute(msg, args) {
       const help_msg = `Hello!\n
