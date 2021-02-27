@@ -23,8 +23,6 @@ bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}!`);
 });
 
-const queue = new Map();
-
 bot.on('message', async (msg) => {
     
     if (msg.author.bot) return;
@@ -37,9 +35,8 @@ bot.on('message', async (msg) => {
     const cmd_prefix = command.charAt(0)
     const cmd = command.substring(1)
 
-    if (!bot.commands.has(cmd) || cmd_prefix !== prefix) return;
-    
-    const server_music_queue = queue.get(msg.guild.id);
+
+    if (!bot.commands.has(cmd) || cmd_prefix !== msg.client.prefix) return;
 
     try {
         // if (music_commands.includes(cmd)) {
