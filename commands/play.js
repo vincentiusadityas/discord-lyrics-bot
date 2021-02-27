@@ -9,7 +9,7 @@ module.exports = {
     async execute(msg, args) {
         args = args.join(' ')
             
-        console.log(msg.author)
+        // console.log(msg.author)
         try {
             const server_queue = msg.client.queue;
             const server_music_queue = server_queue.get(msg.guild.id);

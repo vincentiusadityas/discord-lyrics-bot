@@ -9,7 +9,7 @@ module.exports = {
       if (args.length == 2) {
         if (args[0] == 'prefix') {
           if (Object.keys(prefixes).includes(args[1])) {
-            console.log(prefixes[args[1]])
+            // console.log(prefixes[args[1]])
             msg.client.prefix = args[1]
             msg.channel.send(`\:white_check_mark: **Success!** Prefix changed to \`${args[1]}\``);
           } else {
