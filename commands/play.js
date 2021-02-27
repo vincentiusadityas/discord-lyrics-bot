@@ -76,7 +76,7 @@ module.exports = {
                 } catch (error) {
                     console.log(error);
                     server_queue.delete(msg.guild.id);
-                    return msg.channel.send(error)
+                    return msg.channel.send(`\:interrobang: **Something wrong happened :(**`);
                 }
 
             } else {
@@ -88,7 +88,11 @@ module.exports = {
 
         } catch (error) {
             console.log(error);
-            msg.channel.send(error.message);
+
+            if (error.message === "Status code: 429") {
+                return msg.channel.send(`\:interrobang: **Too many requests :(**`);
+            }
+            return msg.channel.send(`\:interrobang: **Something wrong happened :(**`);
         }
     },
     async playSong(msg, song) {

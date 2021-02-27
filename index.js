@@ -48,6 +48,6 @@ bot.on('message', async (msg) => {
         // }
     } catch (error) {
         console.error(error);
-        msg.reply('there was an error trying to execute that command!');
+        return msg.channel.send(`\:interrobang: **Something wrong happened :(**`);
     }
 });
