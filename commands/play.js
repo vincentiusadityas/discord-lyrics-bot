@@ -100,6 +100,7 @@ module.exports = {
         const server_music_queue = server_queue.get(msg.guild.id);
 
         if (!song) {
+            msg.channel.send(`\:door: **No songs left to play! \:wave: Leaving** \`${server_music_queue.connection.channel.name}\``);
             server_music_queue.voice_channel.leave();
             server_queue.delete(msg.guild.id);
             return;
