@@ -1,7 +1,8 @@
 // const ytdl = require('ytdl-core-discord');
-const ytdl = require('ytdl-core')
-const path = require('path');
-const { sendMusicEmbeds, formatTime } = require('../lib/utils')
+const ytdl = require('ytdl-core');
+const ytsr = require('ytsr');
+const ytpl = require('ytpl');
+const { sendMusicEmbeds, formatTime } = require('../lib/utils');
 
 module.exports = {
     name: 'play',
@@ -34,19 +35,71 @@ module.exports = {
                 );
             }
 
-            msg.channel.send(`\:mag: **Searching...** \:arrow_right: \`${args}\``)
-            const song_info = await ytdl.getInfo(args);
-            // console.log(song_info.videoDetails)
+            let song_info = "";
+            let song = null;
+            let playlist_songs = [];
+            let playlist_detail = null;
 
-            const song = {
-                requester: msg.author.username,
-                requester_id: msg.author.id,
-                title: song_info.videoDetails.title,
-                url: song_info.videoDetails.video_url,
-                length: formatTime(song_info.videoDetails.lengthSeconds)
-            };
+            let isSong = false;
+            let isPlaylist = false;
 
-            // console.log(song)
+            if (args.includes("https://www.youtube.com/watch")) {
+                msg.channel.send(`\:mag: **Searching video...** \:arrow_right: \`${args}\``)
+
+                song_info = await ytdl.getInfo(args);
+                // console.log(song_info.videoDetails)
+                
+                if (song_info === "") return msg.channel.send(`\:x: **Cannot find** \`${args}\`. **Try a different url or keywords!**`)
+
+                // console.log(song)
+                song = {
+                    requester: msg.author.username,
+                    requester_id: msg.author.id,
+                    title: song_info.videoDetails.title,
+                    url: song_info.videoDetails.video_url,
+                    length: formatTime(song_info.videoDetails.lengthSeconds)
+                };
+                isSong = true;
+
+            } else if (args.includes("https://www.youtube.com/playlist")) {
+                msg.channel.send(`\:mag: **Searching playlist...** \:arrow_right: \`${args}\``)
+
+                const playlist = await ytpl(args, { limit: 50 });
+
+                const items = playlist.items;
+
+                let totalLength = 0
+                items.forEach((item, idx) => {
+                    const a_song = {
+                        requester: msg.author.username,
+                        requester_id: msg.author.id,
+                        title: item.title,
+                        url: item.shortUrl,
+                        length: formatTime(item.durationSec)
+                    }
+                    totalLength += parseInt(item.durationSec)
+                    playlist_songs.push(a_song)
+                })
+
+                playlist_detail = {
+                    requester: msg.author.username,
+                    requester_id: msg.author.id,
+                    title: playlist.title,
+                    itemCount: playlist.estimatedItemCount,
+                    id: playlist.id,
+                    url: playlist.url,
+                    totalLength: formatTime(totalLength)
+                }
+
+                isPlaylist = true;
+
+            } else {
+                // msg.channel.send(`\:mag: **Searching...** \:arrow_right: \`${args}\``)
+
+                // song_info = await ytsr(args);
+                // console.log(song_info['items'][0])
+                return msg.channel.send(`\:exclamation: **Currently, you can only provide a youtube link!**`)
+            }
 
             if (!server_music_queue) {
                 const server_music_queue_contract = {
@@ -59,8 +112,17 @@ module.exports = {
                 };
 
                 server_queue.set(msg.guild.id, server_music_queue_contract);
-
-                server_music_queue_contract.song_list.push(song)
+                
+                if (isSong) {
+                    server_music_queue_contract.song_list.push(song)
+                } else if (isPlaylist) {
+                    playlist_songs.forEach((song) => {
+                        server_music_queue_contract.song_list.push(song)
+                    })
+                    msg.channel.send(
+                        `\:pencil: **Playlist** \`${playlist_detail.title} [${playlist_detail.totalLength}]\` with a total of \`${playlist_detail.itemCount} songs\` **has been added to the queue** by <@${playlist_detail.requester_id}>!`
+                      );
+                }
 
                 try {
                     await voice_channel.join()
@@ -80,17 +142,28 @@ module.exports = {
                 }
 
             } else {
-                server_music_queue.song_list.push(song)
-                return msg.channel.send(
-                    `\:pencil: \`${song.title} [${song.length}]\` **has been added to the queue** by <@${song.requester_id}>!`
-                  );
+                if (isSong) {
+                    server_music_queue.song_list.push(song)
+                    return msg.channel.send(
+                        `\:pencil: \`${song.title} [${song.length}]\` **has been added to the queue** by <@${song.requester_id}>!`
+                      );
+                } else if (isPlaylist) {
+                    playlist_songs.forEach((song) => {
+                        server_music_queue.song_list.push(song)
+                    })
+                    return msg.channel.send(
+                        `\:pencil: **Playlist** \`${playlist_detail.title} [${playlist_detail.totalLength}]\` with a total of \`${playlist_detail.itemCount} songs\` **has been added to the queue** by <@${playlist_detail.requester_id}>!`
+                      );
+                }
             }
 
         } catch (error) {
             console.log(error);
 
             if (error.message === "Status code: 429") {
-                return msg.channel.send(`\:interrobang: **Too many requests :(**`);
+                return msg.channel.send(`\:interrobang: **Error: Too many requests :(**`);
+            } else if (error.message === "API-Error: The playlist does not exist.") {
+                return msg.channel.send(`\:interrobang: **Error: The playlist is probably private :(**`);
             }
             return msg.channel.send(`\:interrobang: **Something wrong happened :(**`);
         }
