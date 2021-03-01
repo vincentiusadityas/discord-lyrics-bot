@@ -1,16 +1,14 @@
-// const ytdl = require('ytdl-core-discord');
 const ytdl = require('ytdl-core');
 const ytsr = require('ytsr');
 const ytpl = require('ytpl');
-const { sendMusicEmbeds, formatTime } = require('../lib/utils');
+const { sendYtsrEmbed, formatTime } = require('../lib/utils');
 
 module.exports = {
     name: 'play',
     description: 'Play sounds from a youtube video.',
     async execute(msg, args) {
-        args = args.join(' ')
+        if (args instanceof Array) args = args.join(' ')
             
-        // console.log(msg.author)
         try {
             const server_queue = msg.client.queue;
             const server_music_queue = server_queue.get(msg.guild.id);
@@ -35,7 +33,6 @@ module.exports = {
                 );
             }
 
-            let song_info = "";
             let song = null;
             let playlist_songs = [];
             let playlist_detail = null;
@@ -46,12 +43,10 @@ module.exports = {
             if (args.includes("https://www.youtube.com/watch")) {
                 msg.channel.send(`\:mag: **Searching video...** \:arrow_right: \`${args}\``)
 
-                song_info = await ytdl.getInfo(args);
-                // console.log(song_info.videoDetails)
+                const song_info = await ytdl.getInfo(args);
                 
                 if (song_info === "") return msg.channel.send(`\:x: **Cannot find** \`${args}\`. **Try a different url or keywords!**`)
 
-                // console.log(song)
                 song = {
                     requester: msg.author.username,
                     requester_id: msg.author.id,
@@ -94,11 +89,13 @@ module.exports = {
                 isPlaylist = true;
 
             } else {
-                // msg.channel.send(`\:mag: **Searching...** \:arrow_right: \`${args}\``)
+                msg.channel.send(`\:mag: **Searching...** \:arrow_right: \`${args}\``)
 
-                // song_info = await ytsr(args);
-                // console.log(song_info['items'][0])
-                return msg.channel.send(`\:exclamation: **Currently, you can only provide a youtube link!**`)
+                const filters1 = await ytsr.getFilters(args);
+                const filter1 = filters1.get('Type').get('Video');
+                const song_info = await ytsr(filter1.url, { limit: 10 });
+
+                return await sendYtsrEmbed(song_info.items, msg)
             }
 
             if (!server_music_queue) {
