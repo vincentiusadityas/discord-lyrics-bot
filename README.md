@@ -26,9 +26,11 @@ Steps:
     - `sudo apt install nodejs`
     - `sudo apt install npm`
 
-4. Clone this repo to the root folder
+4. Update nodejs to at least v14 (needed by discord.jd). You can follow the tutorial [here](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04)
 
-5. cd discord-lyrics-bot/ && npm install
+5. Clone this repo to the root folder
+
+6. cd discord-lyrics-bot/ && npm install
 
 
 Development:
