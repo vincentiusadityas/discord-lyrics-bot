@@ -28,7 +28,7 @@ module.exports = {
 
 		total_item_str = (total_item-1) > 1 ? `${total_item-1} entries` : `${total_item-1} entry`
 		msg.channel.send(`\:arrow_forward: **Currently playing:** \`${first_song.title} [${first_song.length}]\` - Requested by <@${first_song.requester_id}>`)
-		msg.channel.send(`\:page_with_curl: **Current queue - ${total_item_str}**`);
-		sendQueueEmbeds(queue_str_list, msg.channel)
+		msg.channel.send(`\:page_with_curl: **Current queue - \:notes: ${total_item_str}**`);
+		sendQueueEmbeds(queue_str_list, msg)
 	},
 };

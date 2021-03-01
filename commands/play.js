@@ -202,7 +202,7 @@ module.exports = {
                 server_music_queue.song_list.shift();
                 const next_song = server_music_queue.song_list[0];
                 if (next_song) {
-                    msg.channel.send(`Next on queue: **${next_song.title}**`)
+                    msg.channel.send(`\:track_next: **Next on queue:** \`${next_song.title} [${next_song.length}]\``)
                 }
                 await this.playSong(msg, next_song)
             })
