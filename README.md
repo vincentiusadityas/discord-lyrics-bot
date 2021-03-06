@@ -16,21 +16,23 @@ I hosted this bot in AWS EC2 (all using the free tier)
 
 Steps:
 
-1. Create AWS account and launch an EC2 instance
+1. Create your discord bot with this permission integer `3172352`
 
-2. SSH to your instance `$ ssh -i "yourkeyfile.pem" ubuntu@<public_IP>`
+2. Create AWS account and launch an EC2 instance
 
-3. Intall nodejs and npm ([tutorial](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04)):
+3. SSH to your instance `$ ssh -i "yourkeyfile.pem" ubuntu@<public_IP>`
+
+4. Intall nodejs and npm ([tutorial](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04)):
     
     - `sudo apt update`
     - `sudo apt install nodejs`
     - `sudo apt install npm`
 
-4. Update nodejs to at least v14 (needed by discord.jd). You can follow the tutorial [here](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04)
+5. Update nodejs to at least v14 (needed by discord.jd). You can follow the tutorial [here](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04)
 
-5. Clone this repo to the root folder
+6. Clone this repo to the root folder
 
-6. cd discord-lyrics-bot/ && npm install
+7. cd discord-lyrics-bot/ && npm install
 
 
 Development:
@@ -46,6 +48,11 @@ Stop production:
 `npm run stop`
 
 
+## Check It Out
+
+> Discord [link](https://discord.com/api/oauth2/authorize?client_id=813253561559285780&permissions=3172352&scope=bot).
+
+> Type ?help to
 
 ## Contact
 
