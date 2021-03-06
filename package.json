@@ -7,7 +7,8 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "nodemon index.js",
         "start": "pm2 start index.js --watch",
-        "stop": "pm2 stop index --watch"
+        "stop": "pm2 stop index --watch",
+        "logs": "pm2 logs index"
     },
     "author": "Vincentius Aditya Sundjaja",
     "license": "ISC",
