@@ -1,13 +1,19 @@
 # Discord Lyrics Bot App with Node.js
 
-This is a simple discord bot app to get song lyrics.
+This is a simple discord bot, initially made to get song lyrics. Now, it is able to play audio from youtube videos.
 
-Lyrics will be fetched from genius.com API
+Lyrics will be fetched from genius.com [API](https://docs.genius.com/)
+
+Youtube audios fetched using [node-ytdl](https://www.npmjs.com/package/ytdl) 
+
 
 ## Requirements
 
 - [Node.js](http://nodejs.org/)
 - [Discord](https://discordapp.com/) account
+- [ytdl](https://www.npmjs.com/package/ytdl)
+- [ytsr](https://www.npmjs.com/package/ytsr)
+- [ytpl](https://www.npmjs.com/package/ytpl)
 
 ## How To
 
