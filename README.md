@@ -58,7 +58,7 @@ Stop production:
 
 > Discord [link](https://discord.com/api/oauth2/authorize?client_id=813253561559285780&permissions=3172352&scope=bot).
 
-> Type ?help to
+> Type ?help to check the available commands
 
 ## Contact
 
